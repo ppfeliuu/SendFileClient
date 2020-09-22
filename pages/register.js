@@ -1,9 +1,16 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import Layout from "../components/Layout";
 import { useFormik } from 'formik';
 import * as Yup from 'yup'
+import authContext from '../context/auth/authContext';
 
 const Register = () => {
+
+    //Access al state
+    const AuthContext = useContext(authContext)
+    const { registrarUsuario } = AuthContext
+
+
 
     const formik = useFormik({
         initialValues: {
@@ -17,7 +24,7 @@ const Register = () => {
             password: Yup.string().required('El password es obligatorio').min(6, 'El password debe contener al menos 6 caracteres')
         }),
         onSubmit: values => {
-            console.log(values)
+            registrarUsuario(values)
         }
     })
 
@@ -26,7 +33,7 @@ const Register = () => {
             <div className="md:w-4/5 xl:w-3/5 mx-auto mb-32">
                 <h2 className="text-4xl font-sans font-bold text-gray-800 text-center my-4">Crear cuenta</h2>
                 <div className="flex justify-center mt-5">
-                    <div classNane="w-full max-w-lg">
+                    <div className="w-full max-w-lg">
                         <form className="bg-white rounded shadow-md px-8 pt-6 pb-8 mb-4" onSubmit={formik.handleSubmit}>
                             <div className="mb-4">
                                 <label className="block text-black text-sm font-bold mb-2" htmlFor="nombre">Nombre</label>
