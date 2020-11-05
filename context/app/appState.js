@@ -9,6 +9,8 @@ import {
   CREAR_ENLACE_OK,
   CREAR_ENLACE_ERROR,
   LIMPIAR_STATE,
+  AGREGAR_PASSWORD,
+  AGREGAR_DESCARGAS,
 } from "../../types";
 import appContext from "./appContext";
 import appReducer from "./appReducer";
@@ -93,6 +95,20 @@ const AppState = ({ children }) => {
     });
   };
 
+  const agregarpass = (pass) => {
+    dispatch({
+      type: AGREGAR_PASSWORD,
+      payload: pass,
+    });
+  };
+
+  const agregarDescargas = (descargas) => {
+    dispatch({
+      type: AGREGAR_DESCARGAS,
+      payload: descargas,
+    });
+  };
+
   return (
     <appContext.Provider
       value={{
@@ -108,6 +124,8 @@ const AppState = ({ children }) => {
         subirArchivos,
         crearEnlace,
         limpiarState,
+        agregarpass,
+        agregarDescargas,
       }}
     >
       {children}
