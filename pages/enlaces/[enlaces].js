@@ -1,6 +1,9 @@
 import Layout from "../../components/Layout";
 import clienteAxios from "../../config/axios";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import appContext from "../../context/app/appContext";
+import Alerta from "../../components/Alerta";
+
 export async function getServerSideProps({ params }) {
   const { enlace } = params;
   const res = await clienteAxios.get(`/api/enlaces/${enlace}`);
@@ -25,12 +28,29 @@ export async function getServerSidePath() {
 }
 
 export default ({ enlace }) => {
+  const AppContext = useContext(appContext);
+  const { mostrarAlerta, mensaje_archivo } = AppContext;
+
   const [tienePass, setTienePass] = useState(enlace.password);
+  const [pass, setPass] = useState("");
 
   console.log(enlace);
 
-  const verificarPassword = (e) => {
-    console.log(e);
+  const verificarPassword = async (e) => {
+    e.preventDefault();
+
+    const data = { pass };
+
+    try {
+      const res = await clienteAxios.post(
+        `/api/enlaces/${enlace.enlace}`,
+        data
+      );
+
+      setPass(res.data.password);
+    } catch (error) {
+      mostrarAlerta(error.response.data.msg);
+    }
   };
 
   return (
@@ -38,6 +58,7 @@ export default ({ enlace }) => {
       {tienePass ? (
         <>
           <p className="text-center">Enlace protegido por password</p>
+          {mensaje_archivo && <Alerta />}
           <div className="flex justify-center mt-5">
             <div className="w-full max-w-lg">
               <form
@@ -55,6 +76,8 @@ export default ({ enlace }) => {
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus: outline-none focus:shadow-outline"
                   id="password"
                   placeholder="Password"
+                  value={pass}
+                  onChange={(e) => setPass(e.target.value)}
                 />
 
                 <input
